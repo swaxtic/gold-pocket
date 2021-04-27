@@ -1,9 +1,11 @@
 package com.enigma.challengegoldpocket.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
 //nama table harus sama dgn di db
 @Entity
@@ -27,6 +29,19 @@ public class Customer {
     private String username;
     private String password;
     private String email;
+
+    @OneToMany(mappedBy = "customer")
+    @JsonIgnore
+    //@JsonIgnoreProperties("customer")
+    private Set<Pocket> pockets = new HashSet<>();
+
+    public Set<Pocket> getPockets() {
+        return pockets;
+    }
+
+    public void setPockets(Set<Pocket> pockets) {
+        this.pockets = pockets;
+    }
 
     public String getId() {
         return id;

@@ -1,5 +1,6 @@
 package com.enigma.challengegoldpocket.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -19,12 +20,14 @@ public class PurchaseDetail {
 
     @ManyToOne //banyak detail satu product
     @JoinColumn(name = "product_id")
+    @JsonIgnoreProperties({"productHistories"})
     private Product product;
     @ManyToOne
     @JoinColumn(name = "purchase_id")
     private Purchase purchase;
     @ManyToOne
     @JoinColumn(name = "pocket_id")
+    @JsonIgnoreProperties({"product"})
     private Pocket pocket;
 
     public Pocket getPocket() {

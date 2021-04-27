@@ -20,14 +20,8 @@ public class PocketRestController {
         return pocketService.findPocketById(id);
     }
 
-//    @GetMapping("/purchases")
-//    public Page<Pocket> getCustomers(@RequestParam(name = "page", defaultValue = "0") Integer page,
-//                                       @RequestParam(name = "size", defaultValue = "5") Integer size){
-//        PageRequest pageRequest = PageRequest.of(page,size);
-//        return pocketService.f(pageRequest);
-//    }
-    //@PostMapping("/pockets")
-//    public void addNewPocket(@RequestBody Pocket pocket){
-//        pocketService.createNewPocket(pocket);
-//    }
+    @PutMapping("/pocket")
+    public Pocket updatePocket(@RequestBody Pocket pocket){
+        return pocketService.updatePocket(pocket);
+    }
 }

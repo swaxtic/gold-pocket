@@ -18,6 +18,8 @@ public class Purchase {
     private String id;
 
     private Date purchaseDate;
+    private Integer purchaseType;
+
     @ManyToOne // custmer
     private Customer customer;
 
@@ -56,5 +58,13 @@ public class Purchase {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Integer getPurchaseType() {
+        return purchaseType;
+    }
+
+    public void setPurchaseType(Integer purchaseType) {
+        this.purchaseType = purchaseType;
     }
 }

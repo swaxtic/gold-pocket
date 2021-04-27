@@ -37,7 +37,6 @@ public class CustomerServiceImpl implements CustomerService {
         //return customerRepository.findAllByFirstNameStartingWithAndEmailContainingAndBirthDateBetween(firstName, email, startDate, endDate, pageable);
     }
 
-
     @Override
     public void createCustomer(Customer customer) {
         customerRepository.save(customer);
@@ -53,6 +52,5 @@ public class CustomerServiceImpl implements CustomerService {
     public void removeCustomer(String id) {
         customerRepository.delete(customerRepository.findById(id).get());
     }
-
 
 }

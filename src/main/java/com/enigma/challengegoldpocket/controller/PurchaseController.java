@@ -18,18 +18,17 @@ public class PurchaseController {
     }
 
     @GetMapping("/purchases")
-    public Page<Purchase> getCustomers(@RequestParam(name = "page", defaultValue = "0") Integer page,
+    public Page<Purchase> getPurchases(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                        @RequestParam(name = "size", defaultValue = "5") Integer size){
         PageRequest pageRequest = PageRequest.of(page,size);
         return purchaseService.findPurchases(pageRequest);
     }
 
     @PostMapping("/purchase")
-    public Purchase addNewPurchase(@RequestParam(name = "customerId") String customerId,
+    public Purchase purchase(@RequestParam(name = "customerId") String customerId,
                                     @RequestBody Purchase purchase){
         return purchaseService.purchase(purchase,customerId);
     }
-
 //    @PutMapping("/customer")
 //    public Customer updateCustomer(@RequestBody Customer customer){
 //        return customerService.updateCustomer(customer);
