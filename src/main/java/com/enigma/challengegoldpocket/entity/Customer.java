@@ -29,6 +29,15 @@ public class Customer {
     private String username;
     private String password;
     private String email;
+    private String phoneNumber;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     @OneToMany(mappedBy = "customer")
     @JsonIgnore
