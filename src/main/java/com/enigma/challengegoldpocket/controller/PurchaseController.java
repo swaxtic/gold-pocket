@@ -2,6 +2,7 @@ package com.enigma.challengegoldpocket.controller;
 
 import com.enigma.challengegoldpocket.entity.Purchase;
 import com.enigma.challengegoldpocket.service.PurchaseService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +27,7 @@ public class PurchaseController {
 
     @PostMapping("/purchase")
     public Purchase purchase(@RequestParam(name = "customerId") String customerId,
-                                    @RequestBody Purchase purchase){
+                                    @RequestBody Purchase purchase) throws JsonProcessingException {
         return purchaseService.purchase(purchase,customerId);
     }
 //    @PutMapping("/customer")

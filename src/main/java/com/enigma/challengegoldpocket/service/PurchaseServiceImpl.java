@@ -1,15 +1,19 @@
 package com.enigma.challengegoldpocket.service;
 
+import com.enigma.challengegoldpocket.dto.PurchaseDto;
 import com.enigma.challengegoldpocket.entity.Customer;
 import com.enigma.challengegoldpocket.entity.Pocket;
 import com.enigma.challengegoldpocket.entity.Purchase;
 import com.enigma.challengegoldpocket.entity.PurchaseDetail;
 import com.enigma.challengegoldpocket.repository.PurchaseRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpMethod;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,12 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Autowired
     MailSender mailSender;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
+    KafkaTemplate kafkaTemplate;
+
 
     @Override
     public Purchase findPurchaseById(String id) {
@@ -49,7 +59,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public Purchase purchase(Purchase purchase, String customerId) {
+    public Purchase purchase(Purchase purchase, String customerId) throws JsonProcessingException {
         Customer customer = customerService.findCustomerById(customerId);
         purchase.setCustomer(customer);
         purchase.setPurchaseDate(new Date());
@@ -81,8 +91,15 @@ public class PurchaseServiceImpl implements PurchaseService {
             System.out.println("Total Amount = "+total);
             System.out.println(componentsBuilder.toString());
 
+            PurchaseDto purchaseDto = new PurchaseDto();
+            purchaseDto.setEmailTo(customer.getEmail());
+            purchaseDto.setCustomerName(customer.getFirstName()+" "+customer.getLastName());
+            purchaseDto.setTotal(total);
+
             restTemplate.exchange(componentsBuilder.toUriString(), HttpMethod.POST, null,String.class);
-            mailSender.sendEmail(customer, purchase);
+            String jsonPurchase = objectMapper.writeValueAsString(purchaseDto);
+            //mailSender.sendEmail(customer, purchase);
+            kafkaTemplate.send("simple-notification",jsonPurchase);
         }
         return purchaseRepository.save(purchase);
     }
