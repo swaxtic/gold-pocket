@@ -47,6 +47,9 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Autowired
     KafkaTemplate kafkaTemplate;
 
+    @Autowired
+    WalletServices walletServices;
+
 
     @Override
     public Purchase findPurchaseById(String id) {
@@ -84,19 +87,13 @@ public class PurchaseServiceImpl implements PurchaseService {
                 total = total.add(purchaseDetail.getPrice().multiply(quantity));
             }
 
-            UriComponentsBuilder componentsBuilder = UriComponentsBuilder
-                    .fromHttpUrl("http://localhost:8098/debit")
-                    .queryParam("phoneNumber",customer.getPhoneNumber())
-                    .queryParam("amount",total);
-            System.out.println("Total Amount = "+total);
-            System.out.println(componentsBuilder.toString());
+            walletServices.debetToWallet(customer, total);
 
             PurchaseDto purchaseDto = new PurchaseDto();
             purchaseDto.setEmailTo(customer.getEmail());
             purchaseDto.setCustomerName(customer.getFirstName()+" "+customer.getLastName());
             purchaseDto.setTotal(total);
 
-            restTemplate.exchange(componentsBuilder.toUriString(), HttpMethod.POST, null,String.class);
             String jsonPurchase = objectMapper.writeValueAsString(purchaseDto);
             //mailSender.sendEmail(customer, purchase);
             kafkaTemplate.send("simple-notification",jsonPurchase);
