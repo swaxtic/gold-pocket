@@ -3,8 +3,10 @@ package com.enigma.challengegoldpocket.controller;
 import com.enigma.challengegoldpocket.dto.ProductSearchDto;
 import com.enigma.challengegoldpocket.entity.Product;
 import com.enigma.challengegoldpocket.entity.ProductHistoryPrice;
+import com.enigma.challengegoldpocket.model.response.ProductResponse;
 import com.enigma.challengegoldpocket.service.ProductHistoryPriceService;
 import com.enigma.challengegoldpocket.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Slf4j
+@CrossOrigin("*")
 public class ProductController {
     @Autowired
     ProductService productService;
@@ -33,6 +37,7 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page,size);
         return productService.searchProduct(productSearchForm,pageable);
     }
+
     @PutMapping("/product")
     public Product updateProduct(@RequestBody Product product){
         return productService.updateProduct(product);
@@ -45,5 +50,10 @@ public class ProductController {
     @GetMapping("/product/{id}/history")
     public List<ProductHistoryPrice> getHistoriesByProduct(@PathVariable(name = "id") String id){
         return productHistoryPriceService.findAllByProduct(id);
+    }
+
+    @GetMapping("/product")
+    public ProductResponse getProductByName(@RequestParam(name = "productName") String productName){
+        return productService.getProductByName(productName);
     }
 }

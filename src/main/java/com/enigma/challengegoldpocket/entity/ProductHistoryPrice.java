@@ -1,5 +1,6 @@
 package com.enigma.challengegoldpocket.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -28,8 +29,8 @@ public class ProductHistoryPrice {
 
     @ManyToOne
     @JoinColumn(name = "product_id") //nama field yg menjadi foreign key
-    //@JsonIgnore // mengabaikan product
-    @JsonIgnoreProperties({"productHistories"}) //ignoer pada entity product
+    @JsonIgnore // mengabaikan product
+//    @JsonIgnoreProperties({"product"}) //ignoer pada entity product
     private Product product;
 
     //men set kolom yg sama

@@ -3,7 +3,9 @@ package com.enigma.challengegoldpocket.controller;
 import com.enigma.challengegoldpocket.dto.CustomerSearchDto;
 import com.enigma.challengegoldpocket.entity.Customer;
 import com.enigma.challengegoldpocket.entity.Pocket;
-import com.enigma.challengegoldpocket.entity.ProductHistoryPrice;
+import com.enigma.challengegoldpocket.model.request.CustomerRequest;
+import com.enigma.challengegoldpocket.model.response.CustomerResponse;
+import com.enigma.challengegoldpocket.service.customer.AuthenticateCustomerService;
 import com.enigma.challengegoldpocket.service.CustomerService;
 import com.enigma.challengegoldpocket.service.PocketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +14,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class CustomerRestController {
     @Autowired
     CustomerService customerService;
 
     @Autowired
     PocketService pocketService;
+
+    @Autowired
+    AuthenticateCustomerService authenticateCustomerService;
 
     @GetMapping("/customer/{id}")
     public Customer getCustomerById(@PathVariable(name = "id") String id){
@@ -52,5 +57,10 @@ public class CustomerRestController {
     @GetMapping("/customer/{id}/pockets")
     public Set<Pocket> getCustomerPockets(@PathVariable(name = "id") String id){
         return pocketService.customerPockets(id);
+    }
+
+    @PostMapping("/login")
+    public CustomerResponse login (@RequestBody CustomerRequest customer) {
+        return authenticateCustomerService.execute(customer);
     }
 }

@@ -2,6 +2,7 @@ package com.enigma.challengegoldpocket.service;
 
 import com.enigma.challengegoldpocket.dto.ProductSearchDto;
 import com.enigma.challengegoldpocket.entity.Product;
+import com.enigma.challengegoldpocket.model.response.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,6 +12,6 @@ public interface ProductService {
     //public void saveProduct(Product product, ProductHistoryPrice productHistoryPrice);
     public Product saveProduct(Product product);
     public Product updateProduct(Product product);
-
+    public ProductResponse getProductByName(String name);
 
 }

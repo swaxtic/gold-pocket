@@ -1,6 +1,5 @@
 package com.enigma.challengegoldpocket.service;
 
-import com.enigma.challengegoldpocket.dto.PurchaseDto;
 import com.enigma.challengegoldpocket.entity.Customer;
 import com.enigma.challengegoldpocket.entity.Pocket;
 import com.enigma.challengegoldpocket.entity.Purchase;
@@ -8,21 +7,19 @@ import com.enigma.challengegoldpocket.entity.PurchaseDetail;
 import com.enigma.challengegoldpocket.repository.PurchaseRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpMethod;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
+@Slf4j
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
 
@@ -39,16 +36,10 @@ public class PurchaseServiceImpl implements PurchaseService {
     RestTemplate restTemplate;
 
     @Autowired
-    MailSender mailSender;
-
-    @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
     KafkaTemplate kafkaTemplate;
-
-    @Autowired
-    WalletServices walletServices;
 
 
     @Override
@@ -59,6 +50,12 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public Page<Purchase> findPurchases(PageRequest pageRequest) {
         return purchaseRepository.findAll(pageRequest);
+    }
+
+    @Override
+    public List<Purchase> findPurchasesByCustomer(String customerId) {
+        log.info("PurchaseService.CustomerID = {}",customerId);
+        return purchaseRepository.getPurchasesByCustomerId(customerId);
     }
 
     @Override
@@ -87,16 +84,6 @@ public class PurchaseServiceImpl implements PurchaseService {
                 total = total.add(purchaseDetail.getPrice().multiply(quantity));
             }
 
-            walletServices.debetToWallet(customer, total);
-
-            PurchaseDto purchaseDto = new PurchaseDto();
-            purchaseDto.setEmailTo(customer.getEmail());
-            purchaseDto.setCustomerName(customer.getFirstName()+" "+customer.getLastName());
-            purchaseDto.setTotal(total);
-
-            String jsonPurchase = objectMapper.writeValueAsString(purchaseDto);
-            //mailSender.sendEmail(customer, purchase);
-            kafkaTemplate.send("simple-notification",jsonPurchase);
         }
         return purchaseRepository.save(purchase);
     }
