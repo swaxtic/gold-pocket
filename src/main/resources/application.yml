@@ -1,0 +1,24 @@
+server:
+  error:
+    include-message: always
+  port: 90
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: administrator
+    url: jdbc:postgresql://localhost:5432/gold_pocket
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    password: xrprswaksajfgiac
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    username: adipkolili@gmail.com
