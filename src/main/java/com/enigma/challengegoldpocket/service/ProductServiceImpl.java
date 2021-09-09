@@ -3,10 +3,10 @@ package com.enigma.challengegoldpocket.service;
 import com.enigma.challengegoldpocket.dto.ProductSearchDto;
 import com.enigma.challengegoldpocket.entity.Product;
 import com.enigma.challengegoldpocket.entity.ProductHistoryPrice;
-import com.enigma.challengegoldpocket.model.response.CustomerResponse;
 import com.enigma.challengegoldpocket.model.response.ProductResponse;
 import com.enigma.challengegoldpocket.repository.ProductRepository;
 import com.enigma.challengegoldpocket.specification.ProductSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
@@ -80,6 +81,7 @@ public class ProductServiceImpl implements ProductService {
                         .updatedAt(product.getUpdatedAt())
                         .build())
                 .orElseThrow(() -> {
+                    log.error("Product with name {} is not found", name);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
     }

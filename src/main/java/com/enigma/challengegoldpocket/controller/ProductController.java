@@ -54,6 +54,8 @@ public class ProductController {
 
     @GetMapping("/product")
     public ProductResponse getProductByName(@RequestParam(name = "productName") String productName){
-        return productService.getProductByName(productName);
+        ProductResponse productResponse = productService.getProductByName(productName);
+        log.info("getProductByName = {}", productResponse);
+        return productResponse;
     }
 }
