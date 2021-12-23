@@ -5,9 +5,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: administrator
-    url: jdbc:postgresql://localhost:5432/gold_pocket
-    username: postgres
+    password: 723fad406580fd1c6dce786cd266f9462d5de29be259c2e8defe39ea58fde586
+    url: jdbc:postgresql://ec2-52-200-188-218.compute-1.amazonaws.com:5432/ddq4qrhdabmhma
+    username: vcxkulpllnfemd
   jpa:
     hibernate:
       ddl-auto: update
