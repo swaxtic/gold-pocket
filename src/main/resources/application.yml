@@ -1,7 +1,6 @@
 server:
   error:
     include-message: always
-  port: 90
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
